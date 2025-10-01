@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+env/
+venv/
+
+# VSCode settings
+.vscode/
+
+# Env files
+.env
+
+# Database files
+*.sqlite3
+
+# MacOS files
+.DS_Store
