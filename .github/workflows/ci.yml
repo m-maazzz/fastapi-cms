@@ -22,13 +22,20 @@ jobs:
 
       - name: Wait for Postgres
         run: |
+          timeout=60
+          elapsed=0
           until docker exec fastapi_cms_db pg_isready; do
             echo "Waiting for Postgres..."
             sleep 2
+            elapsed=$((elapsed + 2))
+            if [ $elapsed -ge $timeout ]; then
+              echo "Postgres did not start in time."
+              exit 1
+            fi
           done
 
       - name: Run tests
-        run: docker exec fastapi_cms_app pytest
+        run: docker exec fastapi_cms_app pytest --maxfail=1 --disable-warnings -q
 
       - name: Tear down
         if: always()
