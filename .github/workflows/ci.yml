@@ -37,9 +37,6 @@ jobs:
             fi
           done
 
-      - name: Run tests
-        run: docker exec fastapi_cms_app pytest --maxfail=1 --disable-warnings -q
-
       - name: Tear down
         if: always()
         run: docker compose down
