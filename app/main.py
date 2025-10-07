@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from app.core.database import Base, engine
+from app.api import routers
 
-# Create tables (later we’ll use Alembic instead of auto create)
+# Create tables (temporary for dev; use Alembic for production)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Portfolio API", version="1.0")
@@ -9,3 +10,8 @@ app = FastAPI(title="Portfolio API", version="1.0")
 @app.get("/")
 def read_root():
     return {"message": "API is running 🚀"}
+
+# Include all routers
+for router in routers:
+    print(f"Including router with prefix: {router.prefix}")  # Debug print
+    app.include_router(router)
