@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form, UploadFile, File
 from sqlalchemy.orm import Session
 from app.schemas.event import EventCreate, EventUpdate, EventOut, EventListResponse
-from app.crud.crud_event import event_crud
+from app.crud.event import event_crud
 from app.core.database import get_db
 from app.core.security import AuthService   
 from app.utlis.file_handler import save_upload_file
@@ -11,12 +11,12 @@ from slugify import slugify
 from typing import Optional, List
 from datetime import datetime
 
-router = APIRouter(prefix="/events", tags=["Events"])
+router = APIRouter(prefix="/events", tags=["Events Admin"])
 auth_service = AuthService()
 
 # ---- Public Routes ----
 @router.get("/", response_model=EventListResponse)
-def list_events(
+def list_events_admin(
     page: int = 1,
     limit: int = 5,
     is_published: Optional[bool] = None,
@@ -74,7 +74,7 @@ def update_event(
     event_id: int,
     title: Optional[str] = Form(None),
     description: Optional[str] = Form(None),
-    event_date: Optional[str] = Form(None),
+    event_date: Optional[str] = Form(None),  # ISO date string or None
     location: Optional[str] = Form(None),
     is_published: Optional[bool] = Form(None),
     organizer_name: Optional[str] = Form(None),
@@ -100,14 +100,14 @@ def update_event(
     if image:
         update_data['image_url'] = save_upload_file(image, subfolder="events")
 
-    event_update = EventUpdate(**update_data)
-
     db_event = event_crud.get(db, event_id)
     if not db_event:
         raise HTTPException(status_code=404, detail="Event not found")
 
+    event_update = EventUpdate(**update_data)
     updated_event = event_crud.update(db, db_event, event_update)
     return updated_event
+
 
 @router.delete("/{event_id}")
 def delete_event(

@@ -16,7 +16,7 @@ auth_service = AuthService()
 
 # ---- Public Routes ----
 @router.get("/", response_model=BlogListResponse)
-def list_blogs(
+def list_blogs_admin(
     page: int = 1,
     limit: int = 5,
     ispublished: bool = None,

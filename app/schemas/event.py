@@ -16,14 +16,14 @@ class EventCreate(EventBase):
     pass
 
 class EventUpdate(BaseModel):
-    title: Optional[str]
-    slug: Optional[str]
-    description: Optional[str]
-    event_date: Optional[datetime]
-    location: Optional[str]
-    image_url: Optional[str]
-    is_published: Optional[bool]
-    organizer_name: Optional[str]
+    title: Optional[str] = None
+    slug: Optional[str] = None
+    description: Optional[str] = None
+    event_date: Optional[datetime] = None
+    location: Optional[str] = None
+    image_url: Optional[str] = None
+    is_published: Optional[bool] = None
+    organizer_name: Optional[str] = None
 
 class EventOut(EventBase):
     id: int
@@ -31,7 +31,7 @@ class EventOut(EventBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class EventListResponse(BaseModel):
     events: List[EventOut]
