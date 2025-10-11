@@ -12,7 +12,7 @@ venv/
 .vscode/
 
 # Env files
-.env.dev
+# .env.dev
 
 # Database files
 *.sqlite3
