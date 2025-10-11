@@ -6,7 +6,6 @@ from datetime import timedelta
 
 from app.core.database import get_db
 from app.crud.user import UserCRUD
-from app.crud.token import TokenCRUD
 from app.core.security import AuthService
 
 router = APIRouter(prefix="/auth", tags=["Auth"])

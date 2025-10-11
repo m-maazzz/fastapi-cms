@@ -12,10 +12,12 @@ venv/
 .vscode/
 
 # Env files
-.env
+.env.dev
 
 # Database files
 *.sqlite3
 
 # MacOS files
 .DS_Store
+
+uploads/
