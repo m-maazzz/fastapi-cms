@@ -7,7 +7,8 @@ from io import StringIO
 from app.core.security import AuthService
 from app.core.database import get_db
 from app.crud.enquiry import ContactCRUD
-from app.schemas.enquiry import ContactResponse,ContactCreate, ContactOut
+from app.schemas.enquiry import ContactResponse,ContactCreate, ContactOut,TestimonialUpdate
+from app.models.enquiry import Testimonial
 
 auth_service = AuthService()
 router = APIRouter(prefix="/contacts", tags=["enquiry admin"])
@@ -43,3 +44,13 @@ def export_contacts(db: Session = Depends(get_db), current_user=Depends(auth_ser
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=contacts.csv"},
     )
+
+@router.put("/testimonial/{testimonial_id}/approve", summary="Approve or Reject Testimonial")
+def approve_testimonial(testimonial_id: int, update_data: TestimonialUpdate, db: Session = Depends(get_db)):
+    testimonial=db.query(Testimonial).filter(Testimonial.id == testimonial_id).first()
+    if not testimonial:
+        return {"message": "Testimonial not found"}
+    testimonial.is_approved = update_data.is_approved
+    db.commit()
+    db.refresh(testimonial)
+    return {"message": f"Testimonial {'approved' if update_data.is_approved else 'rejected'} successfully"}
