@@ -29,12 +29,12 @@ def list_blogs(
         limit=limit
     )
 
-    return BlogListResponse(
-        blogs=[BlogOut.model_validate(blog) for blog in blogs],
-        total=total,
-        page=page,
-        size=len(blogs)
-    )
+    return {
+        "blogs": [BlogOut.model_validate(blog) for blog in blogs],
+        "total": total,
+        "page": page,
+        "size": len(blogs)
+    }
 
 
 

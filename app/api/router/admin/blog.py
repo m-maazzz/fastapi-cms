@@ -11,16 +11,17 @@ from slugify import slugify
 from typing import List
 
 
-router = APIRouter(prefix="/blogs", tags=["Blogs"])
+router = APIRouter(prefix="/blogs", tags=[" Admin Blogs"])
 auth_service = AuthService()
 
 # ---- Public Routes ----
-@router.get("/", response_model=BlogListResponse)
-def list_blogs_admin(
+@router.get("/list-admin", response_model=BlogListResponse)
+async def list_blogs_admin(
     page: int = 1,
     limit: int = 5,
     ispublished: bool = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user=Depends(auth_service.get_current_user)
 ):
     skip = (page - 1) * limit
     if ispublished is not None:
@@ -28,12 +29,12 @@ def list_blogs_admin(
     else:
         blogs, total = blog_crud.get_all(db, skip=skip, limit=limit)
 
-    return BlogListResponse(
-        blogs=[BlogOut.model_validate(blog) for blog in blogs],
-        total=total,
-        page=page,
-        size=len(blogs)
-    )
+    return {
+        "blogs": [BlogOut.model_validate(blog) for blog in blogs],
+        "total": total,
+        "page": page,
+        "size": len(blogs)
+    }
 
 
 # ---- Admin Routes ----

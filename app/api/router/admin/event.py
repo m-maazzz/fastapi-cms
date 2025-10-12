@@ -20,7 +20,8 @@ def list_events_admin(
     page: int = 1,
     limit: int = 5,
     is_published: Optional[bool] = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user=Depends(auth_service.get_current_user)
 ):
     skip = (page - 1) * limit
     if is_published is not None:
